@@ -47,16 +47,16 @@ const commands = [
 /* event listeners */
 
 client.once("ready", () => {
-	console.log(`Ready as ${client.user.tag}`);
+    console.log(`Ready as ${client.user.tag}`);
 });
 
 client.on("interactionCreate", async (interaction) => {
-	if (!interaction.isCommand()) return;
+    if (!interaction.isCommand()) return;
 
-	const { commandName } = interaction;
+    const { commandName } = interaction;
     console.log({ commandName });
 
-	if (commandName === "piyoping") {
+    if (commandName === "piyoping") {
         await interaction.reply("piyopong");
         return;
     } else if (commandName !== "p") {
@@ -112,7 +112,7 @@ async function registerCommands(commands: any[]): Promise<void> {
 
 (async () => {
     // we don't actually have to register guild commands every time
-	const ps = await Promise.all(["z-------------/piyo-anilist"].map(loadPlugin));
+    const ps = await Promise.all(["z-------------/piyo-anilist"].map(loadPlugin));
     for (const plugin of ps) {
         if (plugin) {
             plugins.set(plugin.prefix, plugin);
