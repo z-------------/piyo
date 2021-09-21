@@ -2,7 +2,6 @@
   "name": "piyo",
   "version": "0.0.0",
   "description": "piyo",
-  "main": "dist/main.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/z-------------/piyo.git"
@@ -13,11 +12,17 @@
     "url": "https://github.com/z-------------/piyo/issues"
   },
   "homepage": "https://github.com/z-------------/piyo#readme",
+  "scripts": {
+    "start": "node dist/piyo.js",
+    "watch": "pnpx tsc && pnpx tsc --watch"
+  },
   "dependencies": {
     "@discordjs/builders": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "discord-api-types": "^0.23.1",
-    "discord.js": "^13.1.0"
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
+    "got": "^11.8.2"
   },
   "devDependencies": {
     "typescript": "^4.4.3"
