@@ -97,10 +97,14 @@ function loadPlugin(qualifiedName: string): Plugin | null {
 
 async function registerCommands(commands: any[]): Promise<void> {
     for (const guildId of process.env["GUILDIDS"].split(",")) {
-        await rest.put(
-            Routes.applicationGuildCommands(process.env["CLIENTID"], guildId),
-            { body: commands },
-        );
+        try {
+            await rest.put(
+                Routes.applicationGuildCommands(process.env["CLIENTID"], guildId),
+                { body: commands },
+            );
+        } catch (exp) {
+            console.error(`Failed to register commands on guild ${guildId}:`, exp);
+        }
     }
 }
 
