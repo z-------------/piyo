@@ -16,20 +16,20 @@
 // along with piyo.  If not, see <http://www.gnu.org/licenses/>.
 
 import * as path from "path";
-import * as dotenv from "dotenv";
 import { Client, Intents, TextBasedChannels, Message, MessageEmbed } from "discord.js";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import Plugin from "./plugin";
+import readConfig from "./readConfig";
 
 /* globals */
 
-dotenv.config();
+const config = readConfig(path.join(__dirname, "..", "config.json"));
 
 const client = new Client({ intents: [ Intents.FLAGS.GUILDS ] });
 
-const rest = new REST({ version: "9" }).setToken(process.env["TOKEN"]);
+const rest = new REST({ version: "9" }).setToken(config.token);
 
 const plugins: Map<string, Plugin> = new Map();
 
@@ -96,14 +96,14 @@ function loadPlugin(qualifiedName: string): Plugin | null {
 }
 
 async function registerCommands(commands: any[]): Promise<void> {
-    for (const guildId of process.env["GUILDIDS"].split(",")) {
+    for (const guildId of config.guildIds) {
         try {
             await rest.put(
-                Routes.applicationGuildCommands(process.env["CLIENTID"], guildId),
+                Routes.applicationGuildCommands(config.clientId, guildId),
                 { body: commands },
             );
         } catch (exp) {
-            console.error(`Failed to register commands on guild ${guildId}:`, exp);
+            console.error(`Failed to register commands on guild ${guildId}:`, exp.message);
         }
     }
 }
@@ -112,7 +112,7 @@ async function registerCommands(commands: any[]): Promise<void> {
 
 (async () => {
     // we don't actually have to register guild commands every time
-    const ps = await Promise.all(["z-------------/piyo-anilist"].map(loadPlugin));
+    const ps = await Promise.all(config.plugins.map(loadPlugin));
     for (const plugin of ps) {
         if (plugin) {
             plugins.set(plugin.prefix, plugin);
@@ -124,5 +124,5 @@ async function registerCommands(commands: any[]): Promise<void> {
 
     await registerCommands(commands);
 
-    client.login(process.env["TOKEN"]);
+    client.login(config.token);
 })();
